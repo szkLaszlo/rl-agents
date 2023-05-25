@@ -6,8 +6,8 @@ import time
 from multiprocessing.pool import Pool
 from pathlib import Path
 import numpy as np
-from tensorboardX import SummaryWriter
 from gymnasium.wrappers import RecordVideo, RecordEpisodeStatistics, capped_cubic_video_schedule
+from torch.utils.tensorboard import SummaryWriter
 
 import rl_agents.trainer.logger
 from rl_agents.agents.common.factory import load_environment, load_agent
@@ -76,14 +76,12 @@ class Evaluation(object):
 
         self.directory = Path(directory or self.default_directory)
         self.run_directory = self.directory / (run_directory or self.default_run_directory)
-        self.wrapped_env = RecordVideo(env,
-                                       self.run_directory,
-                                       episode_trigger=(None if self.display_env else lambda e: False))
-        try:
-            self.wrapped_env.unwrapped.set_record_video_wrapper(self.wrapped_env)
-        except AttributeError:
-            pass
-        self.wrapped_env = RecordEpisodeStatistics(self.wrapped_env)
+        self.wrapped_env = env
+        # try:
+        #     self.wrapped_env.unwrapped.set_record_video_wrapper(self.wrapped_env)
+        # except AttributeError:
+        #     pass
+        self.wrapped_env = env
         self.episode = 0
         self.writer = SummaryWriter(str(self.run_directory))
         self.agent.set_writer(self.writer)

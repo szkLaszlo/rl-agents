@@ -1,3 +1,4 @@
+import gym
 import numpy as np
 import torch
 import torch.nn as nn
@@ -411,7 +412,7 @@ def size_model_config(env, model_config):
     :param model_config: a model configuration
     """
 
-    if isinstance(env.observation_space, spaces.Box):
+    if isinstance(env.observation_space, spaces.Box) or isinstance(env.observation_space, gym.spaces.Box):
         obs_shape = env.observation_space.shape
     elif isinstance(env.observation_space, spaces.Tuple):
         obs_shape = env.observation_space.spaces[0].shape
@@ -422,7 +423,7 @@ def size_model_config(env, model_config):
     else:
         model_config["in"] = int(np.prod(obs_shape))
 
-    if isinstance(env.action_space, spaces.Discrete):
+    if isinstance(env.action_space, spaces.Discrete) or isinstance(env.action_space, gym.spaces.Discrete):
         model_config["out"] = int(env.action_space.n)
     elif isinstance(env.action_space, spaces.Tuple):
         model_config["out"] = int(env.action_space.spaces[0].n)

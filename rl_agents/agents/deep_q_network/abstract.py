@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+import gym
 import numpy as np
 from gymnasium import spaces
 
@@ -11,7 +13,7 @@ class AbstractDQNAgent(AbstractStochasticAgent, ABC):
     def __init__(self, env, config=None):
         super(AbstractDQNAgent, self).__init__(config)
         self.env = env
-        assert isinstance(env.action_space, spaces.Discrete) or isinstance(env.action_space, spaces.Tuple), \
+        assert isinstance(env.action_space, spaces.Discrete) or isinstance(env.action_space, spaces.Tuple) or isinstance(env.action_space, gym.spaces.Discrete), \
             "Only compatible with Discrete action spaces."
         self.memory = ReplayMemory(self.config)
         self.exploration_policy = exploration_factory(self.config["exploration"], self.env.action_space)

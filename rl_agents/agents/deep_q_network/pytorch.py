@@ -1,4 +1,7 @@
 import logging
+
+import gym
+import numpy as np
 import torch
 from gymnasium import spaces
 
@@ -77,7 +80,7 @@ class DQNAgent(AbstractDQNAgent):
         return values.data.cpu().numpy(), actions.data.cpu().numpy()
 
     def get_batch_state_action_values(self, states):
-        return self.value_net(torch.tensor(states, dtype=torch.float).to(self.device)).data.cpu().numpy()
+        return self.value_net(torch.tensor(np.array(states), dtype=torch.float).to(self.device)).data.cpu().numpy()
 
     def save(self, filename):
         state = {'state_dict': self.value_net.state_dict(),
@@ -97,7 +100,7 @@ class DQNAgent(AbstractDQNAgent):
 
     def set_writer(self, writer):
         super().set_writer(writer)
-        obs_shape = self.env.observation_space.shape if isinstance(self.env.observation_space, spaces.Box) else \
+        obs_shape = self.env.observation_space.shape if isinstance(self.env.observation_space, spaces.Box) or isinstance(self.env.observation_space, gym.spaces.Box) else \
             self.env.observation_space.spaces[0].shape
         model_input = torch.zeros((1, *obs_shape), dtype=torch.float, device=self.device)
         self.writer.add_graph(self.value_net, input_to_model=(model_input,)),

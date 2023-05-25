@@ -119,7 +119,7 @@ class TrailBlazer(object):
 
 def test():
     import finite_mdp
-    import gym
+    import gymnasium
     env = gym.make('finite-mdp-v0')
     env.configure({
         "mode": "deterministic",

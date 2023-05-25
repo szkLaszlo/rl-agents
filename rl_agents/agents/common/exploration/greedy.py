@@ -1,3 +1,4 @@
+import gym
 import numpy as np
 from gymnasium import spaces
 
@@ -14,7 +15,7 @@ class Greedy(DiscreteDistribution):
         self.action_space = action_space
         if isinstance(self.action_space, spaces.Tuple):
             self.action_space = self.action_space.spaces[0]
-        if not isinstance(self.action_space, spaces.Discrete):
+        if not isinstance(self.action_space, spaces.Discrete) and not isinstance(self.action_space, gym.spaces.Discrete):
             raise TypeError("The action space should be discrete")
         self.values = None
         self.seed()

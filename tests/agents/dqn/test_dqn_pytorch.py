@@ -1,4 +1,4 @@
-import gymnasium as gym
+import gymnasium
 import pytest
 
 torch = pytest.importorskip("torch")
